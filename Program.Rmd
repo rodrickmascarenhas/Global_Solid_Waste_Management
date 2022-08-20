@@ -1,0 +1,227 @@
+---
+title: "DAProject"
+author: "rodrick"
+date: '2022-07-14'
+output: html_document
+---
+#Installing/Loading important packages
+```{r}
+packages <- c("ada","broom","caTools","dplyr","caret","MASS","rpart","rpart.plot","randomForest","e1071","xgboost","class","neuralnet","naivebayes")
+
+sapply(packages,require,character.only=TRUE)
+for(package in packages)
+{
+library(package,require,character.only=TRUE)
+}
+```
+
+```{r}
+waste <- read.csv("W3-S.csv",header=TRUE)
+# removing city, state/province, year, precipitation (not necessary)
+waste <- waste[,-c(1,2,3,4,5,6,9)]
+head(waste,n=5)
+```
+```{r}
+# we want the first 2 letters to predict climate
+waste$Climate.Pattern <- substring(waste$Climate.Pattern,1,2)
+waste$Climate.Pattern <- factor(waste$Climate.Pattern,levels=c("Af","Am","As","Aw","BS","BW","Cf","Df","Cs","Ds","Cw","EF","ET"),labels=c(1,2,3,4,5,6,7,7,8,8,9,10,11))
+waste$Temperature.C <- factor(waste$Temperature.C,levels=c("A","h","k","Ca","Da","Cb","Db","Cc","Dc","E"),labels=c(1,2,3,4,4,5,5,6,6,7))
+#removing special characters from data
+comma <- c(4,12,13,14)
+for (column in comma)
+{
+  waste[,column] <- gsub(',','',waste[,column])
+}
+head(waste)
+```
+# split data into numerical and categorical variables
+```{r}
+num_df <- waste[,-c(2,3,19)]
+colnames(num_df) <- c("Population","Area","Population_Density","Household_Size","Urbanization","Expense_of_GDP","Unemployment","Age(15-64)","Age(65+)","Per_Capita_Energy_Demand","Energy_Demand_Million_kWh","Country_GDP","Service","Service_GDP","Education_Index","Sustainability_Index")
+num_df <- as.data.frame(apply(num_df,2,function(num_df) as.numeric(num_df)))
+
+cat_df <- waste[,c(2,3)]
+colnames(cat_df) <- c("Climate","Temperature")
+```
+```{r}
+# function for outliers
+out <- function(col)
+{
+  q1 <- quantile(col,0.25,na.rm=T)
+  q3 <- quantile(col,0.75,na.rm=T)
+  iqr <- IQR(col,na.rm=T)
+  num_df[which(col<(q1-1.5*iqr)|col>(q3+1.5*iqr)),]<-NA
+}
+# removing outliers
+apply(num_df,FUN=out,MARGIN=2)
+summary(num_df)
+```
+
+# create dummy variable for target and use Regulation_No as reference value
+```{r}
+library(fastDummies)
+target <- waste[,c(19)]
+dummy <- dummy_cols(target,remove_first_dummy=TRUE)
+dummy <- dummy[,-c(1)]
+
+final_df <- cbind(cat_df,num_df,Regulation=factor(dummy))
+# converting factors to numeric
+final_df$Climate <- as.numeric(final_df$Climate)
+final_df$Temperature <- as.numeric(final_df$Temperature)
+
+head(final_df)
+# remove all NAs
+final_df <- na.omit(final_df)
+```
+# use MASS() for stepAIC
+```{r}
+library(MASS)
+logr <- glm(Regulation~.,data=final_df,family=binomial(link="logit"))
+options(scipen=999)
+step_logr <- stepAIC(logr,direction="backward",trace=FALSE)
+summary(step_logr)
+```
+#train-test split
+```{r}
+library(caTools)
+set.seed(111)
+train_test_prt <- sample.split(final_df,SplitRatio=0.7)
+train_val_df <- subset(final_df,train_test_prt==TRUE)
+train_val_prt <- sample.split(train_val_df,SplitRatio=0.7)
+train_df <- subset(train_val_df,train_val_prt==TRUE)
+val_df <- subset(train_val_df,train_val_prt==FALSE)
+test_df <- subset(final_df,train_test_prt==FALSE)
+```
+#Classification models
+1-Logistic Regression
+2-Decision Tree
+3-Random Forest
+4-SVM_Linear
+5-SVM_RBF
+6-AdaBoost
+7-XGBoost
+8-KNN
+9-Neural Network
+10-Naive Bayes
+
+#Create accuracy dataset
+```{r}
+acc <- data.frame()
+```
+#Logistic Regression
+```{r}
+logr <- glm(Regulation~.,data=train_df,family=binomial(link="logit"))
+preds <- predict(logr,test_df)
+prob <- ifelse(preds>0.5,1,0)
+cm <- confusionMatrix(as.factor(prob),test_df$Regulation)
+model <- c("Logistic Regression",round(cm$overall['Accuracy'],3))
+acc <- rbind(acc,model)
+```
+#Decision Tree
+```{r}
+dtree <- rpart(Regulation~.,data=train_df)
+preds <- predict(dtree,test_df)
+prob <- ifelse(preds[,1]>0.5,1,0)
+cm <- confusionMatrix(as.factor(prob),test_df$Regulation)
+model <- c("Decision Tree",round(cm$overall['Accuracy'],3))
+acc <- rbind(acc,model)
+```
+#Random Forest
+```{r}
+rf <- randomForest(Regulation~.,data=data.frame(train_df), importance=TRUE, proximity=TRUE)
+preds <- predict(rf,data.frame(test_df))
+model <- c("Random Forest",round(cm$overall['Accuracy'],3))
+acc <- rbind(acc,model)
+```
+#SVM_Linear
+```{r}
+svm_linear <- svm(Regulation~.,data=train_df,kernel="linear")
+preds <- predict(svm_linear,test_df)
+cm <- confusionMatrix(preds,test_df$Regulation)
+model <- c("SVM_Linear",round(cm$overall['Accuracy'],3))
+acc <- rbind(acc,model)
+```
+#SVM_RBF
+```{r}
+svm_rbf <- svm(Regulation~.,data=train_df,kernel="radial")
+preds <- predict(svm_rbf,test_df)
+cm <- confusionMatrix(preds,test_df$Regulation)
+model <- c("SVM_RBF",round(cm$overall['Accuracy'],3))
+acc <- rbind(acc,model)
+```
+#AdaBoost
+```{r}
+ada <- ada(Regulation~.,data=train_df,type="gentle")
+preds <- predict(ada,test_df)
+cm <- confusionMatrix(preds,test_df$Regulation)
+model <- c("AdaBoost",round(cm$overall['Accuracy'],3))
+acc <- rbind(acc,model)
+```
+#XGBoost
+```{r}
+xgb <- xgboost(data=as.matrix(train_df[,-c(19)]),label=train_df$Regulation,max_depth=2,eta=1,nthread=2,nround=500,"binary:logistic",verbose=0)
+preds <- predict(xgb,as.matrix(test_df[,-c(19)]))
+prob <- ifelse(preds>0.5,1,0)
+cm <- confusionMatrix(as.factor(prob),test_df$Regulation)
+model <- c("XGBoost",round(cm$overall['Accuracy'],3))
+acc <- rbind(acc,model)
+```
+#KNN
+```{r}
+knn <- knn(train=train_df[,-c(19)],test=test_df[,-c(19)],cl=train_df$Regulation,k=3,prob=TRUE)
+cm <- confusionMatrix(knn,test_df$Regulation)
+model <- c("KNN",round(cm$overall['Accuracy'],3))
+acc <- rbind(acc,model)
+```
+#Neural Network
+```{r}
+nn <- neuralnet(Regulation~.,data=data.frame(train_df),hidden=3,act.fct="logistic")
+preds <- predict(nn,data.frame(test_df))
+prob <- ifelse(preds[,1]>0.5,1,0)
+cm <- confusionMatrix(as.factor(prob),test_df$Regulation)
+model <- c("Neural Network",round(cm$overall['Accuracy'],3))
+acc <- rbind(acc,model)
+```
+#Naive Bayes
+```{r}
+nb <- naiveBayes(Regulation~.,data=train_df)
+preds <- predict(nb,test_df)
+cm <- confusionMatrix(preds,test_df$Regulation)
+model <- c("Naive Bayes",round(cm$overall['Accuracy'],3))
+acc <- rbind(acc,model)
+```
+# Accuracy Dataset
+```{r}
+colnames(acc) <- c("Model Name","Accuracy")
+acc[order(acc$Accuracy,decreasing=TRUE),]
+```
+Based on the accuracy table above, KNN returns the highest accuracy followed by AdaBoost, Logistic Regression and SVM_RBF. Hence, we select K-Nearest Neighbor for our out-of-sample predictions.
+
+```{r}
+tab <- data.frame()
+```
+
+#Predicting for train and test sets
+```{r}
+p <- knn(train=train_df[,-c(19)],test=train_df[,-c(19)],cl=train_df$Regulation,k=3,prob=TRUE)
+cm <- confusionMatrix(p,train_df$Regulation)
+out <- c("Training Set",round(cm$overall['Accuracy'],4))
+tab <- rbind(tab,out)
+#test
+p <- knn(train=train_df[,-c(19)],test=test_df[,-c(19)],cl=train_df$Regulation,k=3,prob=TRUE)
+cm <- confusionMatrix(p,test_df$Regulation)
+out <- c("Testing Set",round(cm$overall['Accuracy'],4))
+tab <- rbind(tab,out)
+#Out of Sample dataset
+p <- knn(train=train_df[,-c(19)],test=val_df[,-c(19)],cl=train_df$Regulation,k=3,prob=TRUE)
+cm <- confusionMatrix(p,val_df$Regulation)
+out <- c("Validation Set",round(cm$overall['Accuracy'],4))
+tab <- rbind(tab,out)
+```
+#Display results
+```{r}
+colnames(tab) <- c("","Accuracy")
+tab
+```
+
+Our model can predict the out of sample dataset with up to 97% accuracy score. Since our model predicts training set better than test and out of sample datasets, there may be case of overfitting. 
