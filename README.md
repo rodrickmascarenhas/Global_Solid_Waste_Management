@@ -25,9 +25,7 @@ Our desired goal will create actionable insights, uncover patterns and form hidd
 
 ## Data Description
 
-SWMS has 1720 instances, 18 descriptive attributes and the target variable of category type.
-
-As observed in the following dataset abbreviations, these are the terminologies:
+SWMS has 1720 instances, 18 descriptive attributes and the target variable of category type. As observed in the following dataset abbreviations, these are the terminologies:
 
 Feature	Description
 Year	Year of the record
@@ -86,7 +84,7 @@ Our analysis can be divided into the following steps:
   <li>The results show training accuracy score is higher than testing accuracy score, selected model may lead to overfitting</li>
 </ul>
 
-Classifier can predict the outcome of our testing set with accuracy score of 96%. The score is adequate to determine the class of out-of-sample dataset. As the accuracy score is high, some or all the independent variables can be used to identify whether a particular municipal waste generator is regulated or not.
+Classifier can predict the outcome of our testing set with accuracy score of <b>96%</b>. The score is adequate to determine the class of out-of-sample dataset. As the accuracy score is high, some or all the independent variables can be used to identify whether a particular municipal waste generator is regulated or not.
 
 Factors such as “Education Index”, “Household Size”, “Temperature” and “Sustainability Index” can influence the regular practices of waste management. Waste management awareness plays an important role in waste collection and segregation. Places where Education index is high, waste regulation is prevalent.
 
@@ -95,7 +93,7 @@ Using out-of-sample data obtained from the year 2015, we see that our model can 
 
 ## Concluding Remarks
 
-<b>Prediction: We can predict with high accuracy the actual values of our data for the year 2015</b>
-<b>Outlier data: The dataset contains outliers and missing/ NA values</b>
-<b>Incosistent results: The model has better training set prediction accuracy than that of out-of-sample data, may lead to overfitting</b>
-<b>Validation data: Predicting new data will result in lower accuracy score with increasing variability</b>
+<b>Prediction:</b> We can predict with high accuracy the actual values of our data for the year 2015
+<br /><b>Outlier data:</b> The dataset contains outliers and missing/ NA values
+<br /><b>Incosistent results:</b> The model has better training set prediction accuracy than that of out-of-sample data, may lead to overfitting
+<br /><b>Validation data:</b> Predicting new data will result in lower accuracy score with increasing variability
