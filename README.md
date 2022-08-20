@@ -61,10 +61,10 @@ Regulation	Country has waste regulation or not
 
 Our analysis can be divided into the following steps:
 
-•	Datasets must be split into training and testing subsets of data with each having their own independent and dependent variables.
-•	We fit the training set with the following classification techniques: Logistic Regression, Decision Tree, Random Forest, Support Vector Machines (Linear), Support Vector Machines (RBF), Boosting classifiers, K-Nearest Network, Artificial Neural Network, Naive Bayes
-•	Our classifier should evaluate multiple accuracy scores in pursuit of the highest accuracy score.
-•	That model will be used to predict the target values for our out-of-sample dataset.
+<br />•	Datasets must be split into training and testing subsets of data with each having their own independent and dependent variables.
+<br />•	We fit the training set with the following classification techniques: Logistic Regression, Decision Tree, Random Forest, Support Vector Machines (Linear), Support Vector Machines (RBF), Boosting classifiers, K-Nearest Network, Artificial Neural Network, Naive Bayes
+<br />•	Our classifier should evaluate multiple accuracy scores in pursuit of the highest accuracy score.
+<br />•	That model will be used to predict the target values for our out-of-sample dataset.
 
 
 ## Result Implications
