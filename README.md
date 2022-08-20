@@ -6,18 +6,20 @@ This research study intends to document Solid Waste Management System-related (S
 ## Goals / Objectives
 
 To determine whether a country has waste regulations from a dataset of 1720 records with several identifiers such as population, precipitation, temperature, land area, population density, household size, urbanization, expense, unemployment, age, energy, GDP, service, education index and sustainability index
-<br />- Create a model which may generate accurate results using the least number of features
-<br />- Provide insightful evidence on solid waste management
-<br />- Evaluating the predictive models using confusion matrix and accuracy score and determine the model with best accuracy score for analysis
-<br />- Analyze the prediction using pre-determined test variables and draw results from the observations
+<ul>
+  <li>Create a model which may generate accurate results using the least number of features</li>
+  <li>Provide insightful evidence on solid waste management</li>
+  <li>Evaluating the predictive models using confusion matrix and accuracy score and determine the model with best accuracy score for analysis?</li>
+  <li>Analyze the prediction using pre-determined test variables and draw results from the observations</li>
+</ul>
 
 Our desired goal will create actionable insights, uncover patterns and form hidden relationships from country demographics. The following are important questions we will answer during this project:
 
 <ul>
-<li>- Can these independent variables (features) be used to explain the target variable (waste regulation)?</li>
-- How do factors like household size, temperature, age, education index and sustainability index of a state/ territory determine their waste management practices?
-- What steps are necessary to improve on waste management activities?
--How can we plan resources for sustainability?
+  <li>Can these independent variables (features) be used to explain the target variable (waste regulation)?</li>
+  <li>How do factors like household size, temperature, age, education index and sustainability index of a state/ territory determine their waste management practices?   </li>
+  <li>What steps are necessary to improve on waste management activities?</li>
+  <li>How can we plan resources for sustainability?</li>
 </ul>
 
 
@@ -48,34 +50,41 @@ Education	Education index of Human Development Index (HDI)
 Sustainability	Sustainability index of a country
 Regulation	Country has waste regulation or not
 
-<br />- The dataset contains no missing values and NAs but there were outliers that had to be removed.
-<br />- Min-max transformation to the numerical variables resulted in lower accuracy, it was taken out.
-<br />- Categorical data were converted to discrete values and dummy variables were created; reference values were discarded.
-<br />- Continuous numerical data were checked for outliers. Columns were renamed accordingly.
+<ul>
+  <li>The dataset contains no missing values and NAs but there were outliers that had to be removed</li>
+  <li>Min-max transformation to the numerical variables resulted in lower accuracy, it was taken out</li>
+  <li>Categorical data were converted to discrete values and dummy variables were created; reference values were discarded</li>
+  <li>Continuous numerical data were checked for outliers. Columns were renamed accordingly</li>
+</ul>
 
 
 ## Proposed Model and Justification
 
-<br />- Classifier will provide accurate readings as the target variable contains two factors (Yes or No) which means data is dichotomous.
-<br />- We do not have the likelihood of finding a third target variable as the data suggests
-<br />- We assume that relationship between independent and dependent variables is non-linear and multi-linear regression won’t work
-<br />- It is difficult to translate qualitative to quantitative variables. Hence, we use classification predictive modelling.
+<ul>
+  <li>Classifier will provide accurate readings as the target variable contains two factors (Yes or No) which means data is dichotomous</li>
+  <li>We do not have the likelihood of finding a third target variable as the data suggests</li>
+  <li>We assume that relationship between independent and dependent variables is non-linear and multi-linear regression won’t work</li>
+  <li>It is difficult to translate qualitative to quantitative variables. Hence, we use classification predictive modelling</li>
+</ul>
 
 Our analysis can be divided into the following steps:
 
-<br />•	Datasets must be split into training and testing subsets of data with each having their own independent and dependent variables.
-<br />•	We fit the training set with the following classification techniques: Logistic Regression, Decision Tree, Random Forest, Support Vector Machines (Linear), Support Vector Machines (RBF), Boosting classifiers, K-Nearest Network, Artificial Neural Network, Naive Bayes
-<br />•	Our classifier should evaluate multiple accuracy scores in pursuit of the highest accuracy score.
-<br />•	That model will be used to predict the target values for our out-of-sample dataset.
+<ul>
+  <li>Datasets must be split into training and testing subsets of data with each having their own independent and dependent variables</li>
+  <li>We fit the training set with the following classification techniques: Logistic Regression, Decision Tree, Random Forest, Support Vector Machines (Linear),         Support Vector Machines (RBF), Boosting classifiers, K-Nearest Network, Artificial Neural Network, Naive Bayes</li>
+  <li>Our classifier should evaluate multiple accuracy scores in pursuit of the highest accuracy score</li>
+  <li>That model will be used to predict the target values for our out-of-sample dataset</li>
+</ul>
 
 
 ## Result Implications
 
-
-<br />- The model appears valid and uses the common parameters to fit the target variable accurately. It then performs the testing predictions with good accuracy.
-<br />- Model cannot tolerate missing values and sensitive to outliers, does not work well on imbalanced data.
-<br />- Our best model KNN uses k=3 as the number of training examples needed to predict a new test example and prob=TRUE to return proportion of votes for the winning class as attributes.
-<br />- The results show training accuracy score is higher than testing accuracy score, selected model may lead to overfitting.
+<ul>
+  <li>The model appears valid and uses the common parameters to fit the target variable accurately. It then performs the testing predictions with good accuracy</li>
+  <li>Model cannot tolerate missing values and sensitive to outliers, does not work well on imbalanced data</li>
+  <li>Our best model KNN uses k=3 as the number of training examples needed to predict a new test example and prob=TRUE to return proportion of votes for the winning     class as attributes</li>
+  <li>The results show training accuracy score is higher than testing accuracy score, selected model may lead to overfitting</li>
+</ul>
 
 Classifier can predict the outcome of our testing set with accuracy score of 96%. The score is adequate to determine the class of out-of-sample dataset. As the accuracy score is high, some or all the independent variables can be used to identify whether a particular municipal waste generator is regulated or not.
 
@@ -86,7 +95,7 @@ Using out-of-sample data obtained from the year 2015, we see that our model can 
 
 ## Concluding Remarks
 
-Prediction: We can predict with high accuracy the actual values of our data for the year 2015.
-Outlier data: The dataset contains outliers and missing/ NA values
-Incosistent results: The model has better training set prediction accuracy than that of out-of-sample data, may lead to overfitting.
-Validation data: Predicting new data will result in lower accuracy score with increasing variability.
+<b>Prediction: We can predict with high accuracy the actual values of our data for the year 2015</b>
+<b>Outlier data: The dataset contains outliers and missing/ NA values</b>
+<b>Incosistent results: The model has better training set prediction accuracy than that of out-of-sample data, may lead to overfitting</b>
+<b>Validation data: Predicting new data will result in lower accuracy score with increasing variability</b>
