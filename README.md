@@ -13,10 +13,12 @@ To determine whether a country has waste regulations from a dataset of 1720 reco
 
 Our desired goal will create actionable insights, uncover patterns and form hidden relationships from country demographics. The following are important questions we will answer during this project:
 
-<br />- Can these independent variables (features) be used to explain the target variable (waste regulation)?
-<br />- How do factors like household size, temperature, age, education index and sustainability index of a state/ territory determine their waste management practices?
-<br />- What steps are necessary to improve on waste management activities?
-<br />-How can we plan resources for sustainability?
+<ul>
+<li>- Can these independent variables (features) be used to explain the target variable (waste regulation)?</li>
+- How do factors like household size, temperature, age, education index and sustainability index of a state/ territory determine their waste management practices?
+- What steps are necessary to improve on waste management activities?
+-How can we plan resources for sustainability?
+</ul>
 
 
 ## Data Description
